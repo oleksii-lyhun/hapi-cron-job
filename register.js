@@ -20,15 +20,15 @@ const internals = {
     })
 }
 
-const register = (server, options, next) => {
+const register = (server, options) => {
     const validateOptions = internals.optionsScheme.validate(options)
     const validateJobs = internals.jobsArrayScheme.validate(options.jobs)
 
     if (validateOptions.error) {
-        return next(validateOptions.error)
+        // return next(validateOptions.error)
     }
     if (validateJobs.error) {
-        return next(validateJobs.error)
+        // return next(validateJobs.error)
     }
     if (options.hasOwnProperty('localTime') && !options.localTime) {
         config.timezone = "GMT"
@@ -93,11 +93,13 @@ const register = (server, options, next) => {
     if (options.hasOwnProperty('callback')) {
         options.callback(enabledJobs);
     }
-    return next();
+    // return next();
 };
 
-exports.register = register
-exports.register.attributes = {
-    name: Package.name,
-    version: Package.version
+exports.plugin = {
+    pkg: Package,
+    requirements: {
+        hapi: '>=18.4.0'
+    },
+    register: register
 };
